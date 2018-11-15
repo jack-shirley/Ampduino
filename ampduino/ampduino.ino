@@ -64,8 +64,13 @@ void setup() {
 }
 
 void loop() {
-  if(analogRead(0) > 512) analogWrite(9,255);
-  else analogWrite(9,0);
+  if(true){
+    if(analogRead(0) > 512) analogWrite(9,255);
+    else analogWrite(9,0);
+  }
+  else{
+    analogWrite(9,analogRead(0)/4);
+  }
 }
 
 
