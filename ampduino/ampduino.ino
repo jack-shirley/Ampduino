@@ -3,7 +3,7 @@
 /* GLOBALS */
 #define onLED 8
 #define selector 5  // analog 5 pin
-int mode = -1;
+int mode = 0;
 const int controlPins[] = {2,3,4,5,6,7,8,9,10,12,13};
 // input = A0
 // output = 11
@@ -16,6 +16,9 @@ volatile byte adc0;
 /* AVR Commands */
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit)) // clear bit
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))  // set bit
+
+/* Effects */
+#define distortionThreshold 20
 
 void setup() {
   Serial.begin(57600);
@@ -117,12 +120,26 @@ void setup() {
 
 
 void loop() {
-  // Audio
   while(!sample){ } // wait until sample is received
-  OCR2A = adc0; // output audio to PWM port A11
-  sample = false; // reset sample
-  //Serial.println(adc0);
+  
+  // Output audio
+  switch(mode){
+    case 0: // Clean sound
+      OCR2A = adc0; // output audio to PWM port A11
+      break;
+    case 1: // Distortion effect
+      if(adc0 > (127 + distortionThreshold)) OCR2A = 127 + distortionThreshold;
+      else if(adc0 < (127 - distortionThreshold)) OCR2A = 127 - distortionThreshold;
+      else OCR2A = adc0;
+      break;
+    
+  }
 
+  // Distortion
+  
+  
+  sample = false; // reset sample
+  
   // Controls
   /*
   mode = controlRead();
