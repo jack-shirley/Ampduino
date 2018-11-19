@@ -117,12 +117,11 @@ void setup() {
 
 
 void loop() {
-<<<<<<< HEAD
   // Audio
   while(!sample){ } // wait until sample is received
   OCR2A = adc0; // output audio to PWM port A11
   sample = false; // reset sample
-  Serial.println(adc0);
+  //Serial.println(adc0);
 
   // Controls
   /*
@@ -134,7 +133,7 @@ void loop() {
   if(mode != -1){
     digitalWrite(controlPins[mode], 1);
   }
-  */
+  //*/
 }
 
 // reads control pot to see which one of 11 settings is currently selected
@@ -159,30 +158,6 @@ int controlRead(){
   }
   return -1;
 }
-=======
-
->>>>>>> 2211c66b90a4246590a15ae7cbfdd9bddb41302b
-
-  
-  
-
-  while(!sample){} // wait until sample is received
-
-  //Square Wave
-  if(adc0 > 150){
-    OCR2A = 255;
-  }else{
-    OCR2A = 0;
-  }
-  
-  //OCR2A = adc0; // output audio to PWM port A11
-  sample = false; // reset sample
-}
-
-
-
-
-
 
 ISR(TIMER2_OVF_vect){
   adc0 = ADCH;
