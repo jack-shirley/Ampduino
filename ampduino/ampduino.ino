@@ -113,7 +113,11 @@ void setup() {
   sbi(TIMSK2, TOIE2); // enable timer2 interrupt
 }
 
+
+
+
 void loop() {
+<<<<<<< HEAD
   // Audio
   while(!sample){ } // wait until sample is received
   OCR2A = adc0; // output audio to PWM port A11
@@ -155,11 +159,24 @@ int controlRead(){
   }
   return -1;
 }
+=======
 
-ISR(TIMER2_OVF_vect){
-  adc0 = ADCH;
-  sample = true; // alert the loop that there is a sample available
-  sbi(ADCSRA, ADSC); // start conversion again
+>>>>>>> 2211c66b90a4246590a15ae7cbfdd9bddb41302b
+
+  
+  
+
+  while(!sample){} // wait until sample is received
+
+  //Square Wave
+  if(adc0 > 150){
+    OCR2A = 255;
+  }else{
+    OCR2A = 0;
+  }
+  
+  //OCR2A = adc0; // output audio to PWM port A11
+  sample = false; // reset sample
 }
 
 
@@ -167,8 +184,11 @@ ISR(TIMER2_OVF_vect){
 
 
 
-
-
+ISR(TIMER2_OVF_vect){
+  adc0 = ADCH;
+  sample = true; // alert the loop that there is a sample available
+  sbi(ADCSRA, ADSC); // start conversion again
+}
 
 
 
