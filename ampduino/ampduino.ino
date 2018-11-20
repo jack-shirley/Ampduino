@@ -19,6 +19,7 @@ volatile byte adc0;
 
 /* Effects */
 #define distortionThreshold 20
+byte temp; // for bitcrusher
 
 void setup() {
   Serial.begin(57600);
@@ -136,6 +137,9 @@ void loop() {
       if(adc0 > (127 + distortionThreshold)) OCR2A = 255;
       else if(adc0 < (127 - distortionThreshold)) OCR2A = 0;
       else OCR2A = adc0;
+      break;
+    case 3: // Bit-Crusher
+      temp = adc0 << 1;
       break;
   }
 
