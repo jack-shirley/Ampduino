@@ -3,7 +3,7 @@
 /* GLOBALS */
 #define onLED 8
 #define selector 5  // analog 5 pin
-int mode = 0;
+int mode = 2;
 const int controlPins[] = {2,3,4,5,6,7,8,9,10,12,13};
 // input = A0
 // output = 11
@@ -132,7 +132,11 @@ void loop() {
       else if(adc0 < (127 - distortionThreshold)) OCR2A = 127 - distortionThreshold;
       else OCR2A = adc0;
       break;
-    
+    case 2: // Fuzz effect
+      if(adc0 > (127 + distortionThreshold)) OCR2A = 255;
+      else if(adc0 < (127 - distortionThreshold)) OCR2A = 0;
+      else OCR2A = adc0;
+      break;
   }
 
   // Distortion
