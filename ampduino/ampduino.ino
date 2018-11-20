@@ -3,7 +3,7 @@
 /* GLOBALS */
 #define onLED 8
 #define selector 5  // analog 5 pin
-int mode = 2;
+int mode = 3;
 const int controlPins[] = {2,3,4,5,6,7,8,9,10,12,13};
 // input = A0
 // output = 11
@@ -18,7 +18,7 @@ volatile byte adc0;
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))  // set bit
 
 /* Effects */
-#define distortionThreshold 20
+#define distortionThreshold 10
 byte temp; // for bitcrusher
 
 void setup() {
@@ -140,11 +140,9 @@ void loop() {
       break;
     case 3: // Bit-Crusher
       temp = adc0 << 1;
+      OCR2A = temp;
       break;
   }
-
-  // Distortion
-  
   
   sample = false; // reset sample
   
