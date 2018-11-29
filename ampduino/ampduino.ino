@@ -18,7 +18,8 @@ volatile byte adc0;
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))  // set bit
 
 /* Effects */
-#define distortionThreshold 10
+#define distortionThreshold 25
+#define fuzzThreshold 13
 byte temp; // for bitcrusher
 
 void setup() {
@@ -129,19 +130,27 @@ void loop() {
       OCR2A = adc0; // output audio to PWM port A11
       break;
     case 1: // Distortion effect
+      // slight gain
+      adc0 = (float((adc0 - 127) * 3)) + 127;
       if(adc0 > (127 + distortionThreshold)) OCR2A = 127 + distortionThreshold;
       else if(adc0 < (127 - distortionThreshold)) OCR2A = 127 - distortionThreshold;
       else OCR2A = adc0;
       break;
     case 2: // Fuzz effect
-      if(adc0 > (127 + distortionThreshold)) OCR2A = 255;
-      else if(adc0 < (127 - distortionThreshold)) OCR2A = 0;
+      // slight gain
+      adc0 = (float((adc0 - 127) * 2)) + 127;
+      if(adc0 > (127 + fuzzThreshold)) OCR2A = 255;
+      else if(adc0 < (127 - fuzzThreshold)) OCR2A = 0;
       else OCR2A = adc0;
       break;
     case 3: // Bit-Crusher
-      temp = adc0 << 1;
-      OCR2A = temp;
+      OCR2A = adc0 << 2;
       break;
+    case 4: // Wind-Tunnel
+      if(adc0 % 2 == 0) OCR2A = 255;
+      else OCR2A = 0;
+      break;
+    break;
   }
   
   sample = false; // reset sample
