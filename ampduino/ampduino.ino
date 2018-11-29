@@ -1,10 +1,7 @@
 // AMPDUINO
 
 /* GLOBALS */
-#define onLED 8
-#define selector 5  // analog 5 pin
 int mode = 3;
-const int controlPins[] = {2,3,4,5,6,7,8,9,10,12,13};
 // input = A0
 // output = 11
 
@@ -24,17 +21,6 @@ byte temp; // for bitcrusher
 
 void setup() {
   Serial.begin(57600);
-  
-  // Pins
-  pinMode(onLED, OUTPUT);
-  for(int i=0; i<11; i++){
-    pinMode(controlPins[i], OUTPUT);
-    digitalWrite(controlPins[i], 0);
-  }
-  pinMode(selector, INPUT);
-
-  // Turn on LED
-  //digitalWrite(onLED, HIGH);
 
   /* ADC Setup */
   // We want to turn on ADC and read from A0 (ADC0)
@@ -152,49 +138,14 @@ void loop() {
       break;
     case 5: //Inverse
       if(adc0 < 127){
-        OC2RA = adc0 + 127;
+        OCR2A = adc0 + 127;
       }else{
-        OC2RA = adc0 - 127;
+        OCR2A = adc0 - 127;
       }
     break;
   }
   
   sample = false; // reset sample
-  
-  // Controls
-  /*
-  mode = controlRead();
-  for(int i=0; i<11; i++){
-    digitalWrite(controlPins[i], 0);
-  }
-  //Serial.println(mode);
-  if(mode != -1){
-    digitalWrite(controlPins[mode], 1);
-  }
-  //*/
-}
-
-// reads control pot to see which one of 11 settings is currently selected
-int controlRead(){
-  int err = 30;
-  int in = 0;
-  int sampleSize = 10;
-  int values[] = {1020,967,856,743,637,539,444,337,231,100,60};
-
-  // read selector pin
-  for(int i=0; i<sampleSize; i++){
-    in += analogRead(selector);
-  }
-  in /= sampleSize;
-  //Serial.println(in);
-
-  // determine which mode is selected
-  for(int j=0; j<11; j++){
-    if((in > (values[j] - err)) && (in < (values[j] + err))){
-      return j;
-    }
-  }
-  return -1;
 }
 
 ISR(TIMER2_OVF_vect){
