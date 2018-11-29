@@ -150,6 +150,12 @@ void loop() {
       if(adc0 % 2 == 0) OCR2A = 255;
       else OCR2A = 0;
       break;
+    case 5: //Inverse
+      if(adc0 < 127){
+        OC2RA = adc0 + 127;
+      }else{
+        OC2RA = adc0 - 127;
+      }
     break;
   }
   
