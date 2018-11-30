@@ -19,18 +19,18 @@ volatile byte adc0;
 #define fuzzThreshold 13
 
 /* Control */
-#define c0  2
-#define c1  3
-#define c2  4
+#define c0  A2
+#define c1  A3
+#define c2  A4
 int i = 0;
 
 byte temp; // for bitcrusher
-byte arr[2000] = {0}; // for delay
+byte arr[1000]; // for delay
 byte x = 0; // for delay
 
 
 void setup() {
-  Serial.begin(57600);
+  Serial.begin(9600); // For testing use baud rate of 57600
 
   /* ADC Setup */
   // We want to turn on ADC and read from A0 (ADC0)
@@ -112,6 +112,10 @@ void setup() {
   interrupts(); // re-enable interrupts
   cbi(TIMSK0, TOIE0); // turned off timer0 --- DELAY() is off now
   sbi(TIMSK2, TOIE2); // enable timer2 interrupt
+
+  /* Controls setup */
+  pinMode(c0, INPUT);
+  DIDR0 = 0x01; // turn off digital inputs for A0
 }
 
 void loop() {
@@ -152,10 +156,11 @@ void loop() {
       break;
     case 6: //Delay
       OCR2A = adc0 + arr[x];
-      arr[x] = (adc0 - 127) / 2;
-      if(x == 1999) x = 0;
+      arr[x] = arr[x]/2 + (adc0 - 127) / 2;
+      if(x == 999) x = 0;
       else x++;
       break;
+    default: OCR2A = 0; break;
   }
   
   sample = false; // reset sample
@@ -167,4 +172,10 @@ ISR(TIMER2_OVF_vect){
   adc0 = ADCH;
   sample = true; // alert the loop that there is a sample available
   sbi(ADCSRA, ADSC); // start conversion again
+
+  i++;
+  if (i == 100){
+    i = 0;
+    mode = (digitalRead(c2) << 2) + (digitalRead(c1) << 1) + (digitalRead(c0));
+  }
 }
