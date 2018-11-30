@@ -1,7 +1,7 @@
 // AMPDUINO
 
 /* GLOBALS */
-int mode = 3;
+int mode = 0;
 // input = A0
 // output = 11
 
@@ -17,7 +17,12 @@ volatile byte adc0;
 /* Effects */
 #define distortionThreshold 25
 #define fuzzThreshold 13
-byte temp; // for bitcrusher
+
+/* Control */
+#define c0  2
+#define c1  3
+#define c2  4
+int i = 0;
 
 void setup() {
   Serial.begin(57600);
@@ -104,9 +109,6 @@ void setup() {
   sbi(TIMSK2, TOIE2); // enable timer2 interrupt
 }
 
-
-
-
 void loop() {
   while(!sample){ } // wait until sample is received
   
@@ -146,6 +148,8 @@ void loop() {
   }
   
   sample = false; // reset sample
+
+  //mode = (digitalRead(c2) << 2) + (digitalRead(c1) << 1) + (digitalRead(c0));
 }
 
 ISR(TIMER2_OVF_vect){
@@ -153,23 +157,3 @@ ISR(TIMER2_OVF_vect){
   sample = true; // alert the loop that there is a sample available
   sbi(ADCSRA, ADSC); // start conversion again
 }
-
-
-
-
-
-/*
-// Timer1 interrupt service routine
-ISR(TIMER1_CAPT_vect){
-  // read from ADC registers
-  adcLOW = ADCL; // low 8 bits
-  adcHIGH = ADCH; // high 2 bits
-  adcINPUT = ((adcHIGH << 8) | adcLOW); // bit shift left on the high bits, 'OR' with low bits
-  adcINPUT += 0x8000; // make it signed
-
-  // write to pin 9
-  OCR1AL = ((adcINPUT + 0x8000) >> 8); // convert to unsigned, higher byte
-  // write to pin 10
-  OCR1BL = adcINPUT; // lower byte
-}
-*/
