@@ -24,6 +24,11 @@ volatile byte adc0;
 #define c2  4
 int i = 0;
 
+byte temp; // for bitcrusher
+byte arr[2000] = {0}; // for delay
+byte x = 0; // for delay
+
+
 void setup() {
   Serial.begin(57600);
 
@@ -144,7 +149,13 @@ void loop() {
       }else{
         OCR2A = adc0 - 127;
       }
-    break;
+      break;
+    case 6: //Delay
+      OCR2A = adc0 + arr[x];
+      arr[x] = (adc0 - 127) / 2;
+      if(x == 1999) x = 0;
+      else x++;
+      break;
   }
   
   sample = false; // reset sample
