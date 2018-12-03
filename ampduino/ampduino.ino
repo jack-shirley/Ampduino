@@ -141,31 +141,39 @@ void loop() {
       else OCR2A = adc0;
       break;
     case 3: // Bit-Crusher
-      OCR2A = adc0 << 2;
+      OCR2A = adc0 << 1;
       break;
     case 4: // Wind-Tunnel
       if(adc0 % 2 == 0) OCR2A = 255;
       else OCR2A = 0;
       break;
-    case 5: //Inverse
+    case 5: // Inverse
       if(adc0 < 127){
         OCR2A = adc0 + 127;
       }else{
         OCR2A = adc0 - 127;
       }
       break;
-    case 6: //Delay
+    case 6: // Phasor
       OCR2A = adc0 + arr[x];
-      arr[x] = arr[x]/2 + (adc0 - 127) / 2;
+      arr[x] = arr[x]/2 + (adc0 - 127) / 1;
       if(x == 999) x = 0;
       else x++;
       break;
+    case 7: // Crunch
+      // large gain
+      adc0 = (float((adc0 - 127) * 5)) + 127;
+      OCR2A = adc0;
+      break;
+    case 7: // Gain
+      adc0 = (float((adc0 - 127) * 7)) + 127;
+      OCR2A = adc0;
+      break;
+    
     default: OCR2A = 0; break;
   }
   
   sample = false; // reset sample
-
-  //mode = (digitalRead(c2) << 2) + (digitalRead(c1) << 1) + (digitalRead(c0));
 }
 
 ISR(TIMER2_OVF_vect){
