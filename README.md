@@ -6,7 +6,7 @@ https://www.youtube.com/watch?v=M-LkqirBfyE
 # Project Description
 Full source code available on https://github.com/jack-shirley/Ampduino. For any further questions on Arduino realtime signal processing, contact aschwenn@tamu.edu.
 
-Our "Ampduino" is essentially a guitar effect box implementedusing an Arduino Uno to perform real-time digital signal processing. The objective in building this project is to create a guitar effects box that is relatively small and lightweight, and allows the user to select from a variety of effects as well as manipulate the effect itself. Creation of a unique and individual tone and sound is the critical concept for guitarists, and our goal is to provide users with the ability to effectively manipulate input signals.
+Our "Ampduino" is essentially a guitar effect box implemented using an Arduino Uno to perform real-time digital signal processing. The objective in building this project is to create a guitar effects box that is relatively small and lightweight, and allows the user to select from a variety of effects as well as manipulate the effect itself. Creation of a unique and individual tone and sound is the critical concept for guitarists, and our goal is to provide users with the ability to effectively manipulate input signals.
 
 # Signal Processing on the Arduino
 
